@@ -19,7 +19,5 @@
     "deploy": "gh-pages -d build",
     "cypress:open": "cypress open"
   },
-  "devDependencies": {
-    "cypress": "^1.0.3"
-  }
+  "devDependencies": {}
 }
