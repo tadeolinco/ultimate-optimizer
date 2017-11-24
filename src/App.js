@@ -2,37 +2,51 @@ import React, { Component } from 'react';
 import { ULTIMATE_OPTIMIZER, SMART_INVEST } from './constants';
 import { green400, blue400 } from 'material-ui/styles/colors';
 import Navbar from './features/Navbar';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 import UltimateOptimizer from './features/UltimateOptimizer';
 import SmartInvest from './features/SmartInvest';
+import { navbarHeight } from './features/Navbar/Navbar';
 
 class App extends Component {
   state = {
-    solver: ULTIMATE_OPTIMIZER
+    solver: ULTIMATE_OPTIMIZER,
+    theme: getMuiTheme({ palette: { primary1Color: blue400 } })
   };
 
-  handleChangeSolver = solver => this.setState({ solver });
+  handleChangeSolver = solver => {
+    const theme = { palette: { primary1Color: blue400 } };
+    if (solver === SMART_INVEST) theme.palette.primary1Color = green400;
+    this.setState({ solver, theme: getMuiTheme(theme) });
+  };
 
   render() {
-    const primaryColor =
-      this.state.solver === ULTIMATE_OPTIMIZER ? blue400 : green400;
+    const margin = 50;
+    const bodyStyle = {
+      margin: `${margin}px ${2 * margin}px`,
+      height: `calc(100vh - ${navbarHeight}px - ${2 * margin}px)`,
+      width: `calc(50vw - ${2 * margin}px)`
+    };
+
+    const body =
+      this.state.solver === ULTIMATE_OPTIMIZER ? (
+        <UltimateOptimizer />
+      ) : (
+        <SmartInvest />
+      );
 
     return (
-      <div>
-        <Navbar
-          primaryColor={primaryColor}
-          handleChangeSolver={this.handleChangeSolver}
-          solver={this.state.solver}
-        />
-        <div style={{ marginLeft: 200, marginRight: 200, marginTop: 50 }}>
-          {this.state.solver === ULTIMATE_OPTIMIZER ? (
-            <UltimateOptimizer primaryColor={primaryColor} />
-          ) : (
-            <SmartInvest primaryColor={primaryColor} />
-          )}
+      <MuiThemeProvider muiTheme={this.state.theme}>
+        <div>
+          <Navbar
+            handleChangeSolver={this.handleChangeSolver}
+            solver={this.state.solver}
+          />
+          <div style={bodyStyle}>{body}</div>
         </div>
-      </div>
+      </MuiThemeProvider>
     );
-    // return <h1>ultimate-optimizer</h1>;
   }
 }
 
