@@ -10,13 +10,7 @@ class App extends Component {
     solver: ULTIMATE_OPTIMIZER
   };
 
-  handleToggleSolver = () =>
-    this.setState({
-      solver:
-        this.state.solver === ULTIMATE_OPTIMIZER
-          ? SMART_INVEST
-          : ULTIMATE_OPTIMIZER
-    });
+  handleChangeSolver = solver => this.setState({ solver });
 
   render() {
     const primaryColor =
@@ -26,10 +20,10 @@ class App extends Component {
       <div>
         <Navbar
           primaryColor={primaryColor}
-          handleToggleSolver={this.handleToggleSolver}
+          handleChangeSolver={this.handleChangeSolver}
           solver={this.state.solver}
         />
-        <div style={{ marginLeft: 200, marginRight: 200, marginTop: 100 }}>
+        <div style={{ marginLeft: 200, marginRight: 200, marginTop: 50 }}>
           {this.state.solver === ULTIMATE_OPTIMIZER ? (
             <UltimateOptimizer primaryColor={primaryColor} />
           ) : (

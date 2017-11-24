@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import Divider from 'material-ui/Divider';
 import uuid from 'uuid/v1';
 
 class UltimateOptimizer extends Component {
@@ -25,9 +24,11 @@ class UltimateOptimizer extends Component {
   render() {
     return (
       <div>
+        <div className="label">Objective Function</div>
         <span>Z = </span>
         {this.state.zs.map((z, index) => (
-          <div key={z.id} style={{ display: 'inline', marginRight: 40 }}>
+          <div key={z.id} style={{ display: 'inline' }}>
+            {index !== 0 && <span style={{ margin: '0 20px' }}>+</span>}
             <TextField
               id={z.id}
               value={z.value}
