@@ -6,10 +6,9 @@ import DeleteBadge from '../DeleteBadge';
 const ObjectiveFunction = props => (
   <div>
     <div className="label">
-      Objective Function{' '}
-      <AddButton size={20} handleOnClick={props.handleAddZ} />
+      <span style={{ paddingRight: 20 }}>Objective Function</span>
+      <AddButton handleOnClick={props.handleAddZ} name="add-z" />
     </div>
-    <br />
 
     <span>Z = </span>
     {props.zs.map((z, index) => (
@@ -18,6 +17,7 @@ const ObjectiveFunction = props => (
         <DeleteBadge id={z.id} handleOnClick={props.handleRemoveZ}>
           <div style={{ padding: '20px 10px 0px', display: 'inline' }}>
             <TextField
+              className={'z' + index}
               inputStyle={{ fontSize: '28px' }}
               id={z.id}
               value={z.value}

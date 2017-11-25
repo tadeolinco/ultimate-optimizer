@@ -12,21 +12,26 @@ import { navbarHeight } from './features/Navbar/Navbar';
 class App extends Component {
   state = {
     solver: ULTIMATE_OPTIMIZER,
-    theme: getMuiTheme({ palette: { primary1Color: blue400 } })
+    theme: getMuiTheme({
+      palette: { primary1Color: blue400, accent1Color: blue400 }
+    })
   };
 
   handleChangeSolver = solver => {
-    const theme = { palette: { primary1Color: blue400 } };
-    if (solver === SMART_INVEST) theme.palette.primary1Color = green400;
+    const theme = {
+      palette: { primary1Color: blue400, accent1Color: blue400 }
+    };
+    if (solver === SMART_INVEST) {
+      theme.palette.primary1Color = green400;
+      theme.palette.accent1Color = green400;
+    }
     this.setState({ solver, theme: getMuiTheme(theme) });
   };
 
   render() {
     const margin = 50;
     const bodyStyle = {
-      margin: `${margin}px ${2 * margin}px`,
-      height: `calc(100vh - ${navbarHeight}px - ${2 * margin}px)`,
-      width: `calc(50vw - ${2 * margin}px)`
+      margin: `${margin}px ${margin / 2}px`
     };
 
     const body =

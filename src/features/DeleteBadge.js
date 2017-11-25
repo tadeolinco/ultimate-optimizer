@@ -24,7 +24,7 @@ class DeleteBadge extends Component {
             style={{
               position: 'absolute',
               top: -16,
-              right: 0,
+              right: this.props.right || 0,
               padding: 0,
               width: 24,
               height: 24
