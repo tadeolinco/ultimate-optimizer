@@ -11,7 +11,6 @@ describe('working', () => {
       .clear()
       .type(175);
 
-    cy.get('button[name="add-c"]').click();
     cy
       .get('.c00 > input')
       .clear()

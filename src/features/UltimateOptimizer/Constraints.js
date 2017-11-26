@@ -1,9 +1,7 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
 import AddButton from '../AddButton';
 import DeleteBadge from '../DeleteBadge';
-import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 
 const Constraints = props => (

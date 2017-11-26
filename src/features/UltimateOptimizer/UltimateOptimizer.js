@@ -4,17 +4,23 @@ import uuid from 'uuid/v1';
 import ObjectiveFunction from './ObjectiveFunction';
 import Constraints from './Constraints';
 import Divider from 'material-ui/Divider';
-import RaisedButton from 'material-ui/RaisedButton';
 import Tableau from './Tableau';
 import MaximizeButton from './MaximizeButton';
 import SolveButton from './SolveButton';
+import Graph from './Graph';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import { navbarHeight } from '../Navbar/Navbar';
 
 class UltimateOptimizer extends Component {
   state = {
     zs: [{ value: 0, id: uuid() }],
-    constraints: [],
+    constraints: [
+      {
+        values: [0],
+        sign: '<=',
+        constant: 0,
+        id: uuid()
+      }
+    ],
     maximize: true,
     tables: [],
     selectedTable: -1,
@@ -22,11 +28,12 @@ class UltimateOptimizer extends Component {
   };
 
   handleSolve = () => {
+    let tables = [];
     // initialize headers to be the x1, x2, etc
-    const headers = [
+    let headers = [
       ...this.state.zs.map((z, index) => ({ title: 'X', sub: index + 1 }))
     ];
-    const data = [
+    let data = [
       ...this.state.constraints.map((constraint, index, constraints) => {
         headers.push({ title: 'S', sub: index + 1 });
         return [
@@ -37,19 +44,27 @@ class UltimateOptimizer extends Component {
         ];
       })
     ];
-    headers.push({ title: 'Z', sub: 0 });
-    headers.push({ title: 'Solution', sub: 0 });
-    data.push([
-      ...this.state.zs.map(z => 0 - +z.value),
-      ...this.state.constraints.map(() => 0),
-      1,
-      0
-    ]);
+    headers = [
+      ...headers,
+      { title: 'Z', sub: 0 },
+      { title: 'Solution', sub: 0 }
+    ];
 
-    let iteration = 0;
+    data = [
+      ...data,
+      [
+        ...this.state.zs.map(
+          z => (this.state.maximize ? 0 - +z.value : +z.value)
+        ),
+        ...this.state.constraints.map(() => 0),
+        1,
+        0
+      ]
+    ];
+    tables = [...tables, { headers, data, pivotRow: -1, pivotElement: -1 }];
     const Z = data.length - 1;
     const SOLUTION = headers.length - 1;
-    while (true) {
+    while (data[Z].find(cell => cell < 0)) {
       let pivotRow = null;
       let pivotCol = null;
       let minimumElement = 0;
@@ -74,27 +89,38 @@ class UltimateOptimizer extends Component {
           pivotRow = row;
         }
       }
-
-      data[pivotRow] = data[pivotRow].map(cell => cell / pivotElement);
-      for (let row = 0; row < data.length; ++row) {
-        if (row === pivotRow) continue;
-        data[row] = data[row].map(
-          (cell, index) => -data[row][pivotCol] * data[pivotRow][index] + cell
-        );
+      if (pivotRow === null) {
+        return this.props.handleAddMessage('Error in solving');
       }
-      this.setState({
-        tables: [
-          ...this.state.tables,
-          {
-            headers: [...headers],
-            data: data.map(row => [...row])
-          }
-        ]
+      data[pivotRow] = data[pivotRow].map(cell => cell / pivotElement);
+      data = data.map((row, rowIndex) => {
+        if (rowIndex === pivotRow) return row;
+        return row.map(
+          (cell, cellIndex) =>
+            -data[rowIndex][pivotCol] * data[pivotRow][cellIndex] + cell
+        );
       });
-      iteration++;
-      if (!data[Z].find(cell => cell < 0)) break;
+      tables = [
+        ...tables,
+        {
+          headers: [...headers],
+          data: data.map(row =>
+            row.map(cell => {
+              const tokens = ('' + cell).split('.');
+              if (tokens.length === 1) return cell;
+              return cell.toFixed(Math.min(tokens[1].length, 4));
+            })
+          ),
+          pivotColumn: pivotCol,
+          pivotElement: pivotRow
+        }
+      ];
     }
-    this.setState({ selectedTable: 0 });
+    this.setState({ selectedTable: 0, tab: 'table', tables });
+  };
+
+  handleChangeTable = table => {
+    this.setState({ selectedTable: table });
   };
 
   handleAddZ = () => {
@@ -137,6 +163,7 @@ class UltimateOptimizer extends Component {
   };
 
   handleRemoveConstraint = event => {
+    if (this.state.constraints.length === 1) return;
     this.setState({
       constraints: this.state.constraints.filter(
         constraint => constraint.id !== event.target.id
@@ -146,7 +173,7 @@ class UltimateOptimizer extends Component {
 
   handleChangeZ = event => {
     const { value, id } = event.target;
-    if (isNaN(value)) return;
+    if (isNaN(value) && value !== '-') return;
     const zs = this.state.zs.map(z => {
       if (z.id === id) {
         return { ...z, value: !value ? 0 : value };
@@ -157,7 +184,7 @@ class UltimateOptimizer extends Component {
   };
 
   handleChangeConstraintValue = (id, index, value) => {
-    if (isNaN(value)) return;
+    if (isNaN(value) && value !== '-') return;
     const constraints = this.state.constraints.map(constraint => {
       if (constraint.id === id) {
         const values = constraint.values.map((v, i) => {
@@ -240,16 +267,28 @@ class UltimateOptimizer extends Component {
           </Tab>
           <Tab label="Table" value="table">
             {this.state.selectedTable === -1 ? (
-              <div style={{ textAlign: 'center' }}>Input first</div>
+              <div style={{ textAlign: 'center' }}>Input a problem first</div>
             ) : (
               <Tableau
                 selectedTable={this.state.selectedTable}
                 tables={this.state.tables}
+                handleChangeTable={this.handleChangeTable}
               />
             )}
           </Tab>
           <Tab label="Graph" value="graph">
-            {/*  */}
+            {this.state.selectedTable === -1 ? (
+              <div style={{ textAlign: 'center' }}>Input a problem first</div>
+            ) : (
+              <div style={{ paddingBottom: 50 }}>
+                <Graph
+                  zs={this.state.zs}
+                  constraints={this.state.constraints}
+                  domain={{ start: -20, end: 20 }}
+                  maximize={this.state.maximize}
+                />
+              </div>
+            )}
           </Tab>
         </Tabs>
       </Paper>

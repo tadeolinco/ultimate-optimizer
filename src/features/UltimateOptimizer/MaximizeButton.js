@@ -6,7 +6,7 @@ const MaximizeButton = props => (
     primary
     labelStyle={{ fontSize: 20 }}
     style={{ width: '25%', marginLeft: `${50 / 3}%` }}
-    label={props.maximize ? 'maximize' : 'minimize'}
+    label={props.maximize ? 'Maximize' : 'Minimize'}
     onClick={props.handleToggleMaximize}
   />
 );
