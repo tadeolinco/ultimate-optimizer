@@ -28,6 +28,7 @@ class UltimateOptimizer extends Component {
   };
 
   handleSolve = () => {
+    this.setState({ z: 0 });
     let tables = [];
     // initialize headers to be the x1, x2, etc
     let headers = [
@@ -38,7 +39,9 @@ class UltimateOptimizer extends Component {
         headers.push({ title: 'S', sub: index + 1 });
         return [
           ...constraint.values.map(v => +v),
-          ...constraints.map((c, i) => (i === index ? 1 : 0)),
+          ...constraints.map(
+            (c, i) => (i === index ? (constraint.sign === '<=' ? 1 : -1) : 0)
+          ),
           0,
           +constraint.constant
         ];
@@ -49,19 +52,34 @@ class UltimateOptimizer extends Component {
       { title: 'Z', sub: 0 },
       { title: 'Solution', sub: 0 }
     ];
-
-    data = [
-      ...data,
-      [
-        ...this.state.zs.map(
-          z => (this.state.maximize ? 0 - +z.value : +z.value)
-        ),
-        ...this.state.constraints.map(() => 0),
-        1,
-        0
-      ]
+    // data = [
+    //   ...data,
+    //   [
+    //     ...this.state.zs.map(
+    //       z => (this.state.maximize ? 0 - +z.value : +z.value)
+    //     ),
+    //     ...this.state.constraints.map(() => 0),
+    //     1,
+    //     0
+    //   ]
+    // ];
+    data.push([
+      ...this.state.zs.map(
+        z => (this.state.maximize ? 0 - +z.value : +z.value)
+      ),
+      ...this.state.constraints.map(() => 0),
+      1,
+      0
+    ]);
+    tables = [
+      ...tables,
+      {
+        headers,
+        data: [...data.map(row => [...row])],
+        pivotRow: -1,
+        pivotElement: -1
+      }
     ];
-    tables = [...tables, { headers, data, pivotRow: -1, pivotElement: -1 }];
     const Z = data.length - 1;
     const SOLUTION = headers.length - 1;
     while (data[Z].find(cell => cell < 0)) {
@@ -279,6 +297,8 @@ class UltimateOptimizer extends Component {
           <Tab label="Graph" value="graph">
             {this.state.selectedTable === -1 ? (
               <div style={{ textAlign: 'center' }}>Input a problem first</div>
+            ) : this.state.zs.length > 2 ? (
+              <div style={{ textAlign: 'center' }}>Only for 1-2 variables</div>
             ) : (
               <div style={{ paddingBottom: 50 }}>
                 <Graph
@@ -286,6 +306,7 @@ class UltimateOptimizer extends Component {
                   constraints={this.state.constraints}
                   domain={{ start: -20, end: 20 }}
                   maximize={this.state.maximize}
+                  tables={this.state.tables}
                 />
               </div>
             )}
