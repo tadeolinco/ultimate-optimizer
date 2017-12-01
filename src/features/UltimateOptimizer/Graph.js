@@ -79,26 +79,27 @@ const Graph = props => {
       });
     }
   });
-  console.log(constraintsData);
   return (
     <FlexibleWidthXYPlot height={450}>
       <HorizontalGridLines />
       <VerticalGridLines />
-      <LineSeries data={zData} curve={'curveMonotoneX'} />
+      <LineSeries
+        data={[{ x: props.domain.start, y: 0 }, { x: props.domain.end, y: 0 }]}
+        color="#000"
+      />
+      <LineSeries data={[{ x: 0, y: minY }, { x: 0, y: maxY }]} color="#000" />
       {constraintsData.map((data, index) => (
         <LineSeries key={index} data={data} curve={'curveMonotoneX'} />
       ))}
-      <LineSeries
-        data={[{ x: props.domain.start, y: 0 }, { x: props.domain.end, y: 0 }]}
-      />
-      <LineSeries data={[{ x: 0, y: minY }, { x: 0, y: maxY }]} />
+
+      <LineSeries data={zData} curve={'curveMonotoneX'} />
       <DiscreteColorLegend
         orientation="horizontal"
         items={[
           'Objective Function',
           ...constraintsData.map((c, i) => `Constraint ${i + 1}`),
-          'X Axis',
-          'Y Axis'
+          { title: 'X Axis', color: '#000' },
+          { title: 'Y Axis', color: '#000' }
         ]}
       />
       <XAxis />

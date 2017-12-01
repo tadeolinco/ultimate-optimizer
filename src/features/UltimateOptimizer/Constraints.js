@@ -23,11 +23,11 @@ const Constraints = props => (
                 {index2 !== 0 && <span style={{ margin: '0 10px' }}>+</span>}
                 <TextField
                   className={'c' + index1 + index2}
-                  inputStyle={{ fontSize: '28px' }}
+                  inputStyle={{ fontSize: '24px' }}
                   id={constraint.id}
                   value={v}
                   style={{
-                    width: `${(v + '').length * 16}px`
+                    width: `${(v + '').length * 13}px`
                   }}
                   onChange={event =>
                     props.handleChangeConstraintValue(

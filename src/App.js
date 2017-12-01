@@ -6,12 +6,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import UltimateOptimizer from './features/UltimateOptimizer';
-import SmartInvest from './features/SmartInvest';
+import SmartInvestment from './features/SmartInvestment';
 import Snackbar from 'material-ui/Snackbar';
 
 class App extends Component {
   state = {
-    solver: ULTIMATE_OPTIMIZER,
+    solver: SMART_INVEST,
     theme: getMuiTheme({
       palette: { primary1Color: blue400, accent1Color: green400 }
     }),
@@ -43,7 +43,7 @@ class App extends Component {
       this.state.solver === ULTIMATE_OPTIMIZER ? (
         <UltimateOptimizer handleAddMessage={this.handleAddMessage} />
       ) : (
-        <SmartInvest handleAddMessage={this.handleAddMessage} />
+        <SmartInvestment handleAddMessage={this.handleAddMessage} />
       );
 
     return (

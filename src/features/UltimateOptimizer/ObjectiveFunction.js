@@ -18,11 +18,11 @@ const ObjectiveFunction = props => (
           <div style={{ padding: '20px 10px 0px', display: 'inline' }}>
             <TextField
               className={'z' + index}
-              inputStyle={{ fontSize: '28px' }}
+              inputStyle={{ fontSize: '24px' }}
               id={z.id}
               value={z.value}
               style={{
-                width: `${(z.value + '').length * 16}px`
+                width: `${(z.value + '').length * 13}px`
               }}
               onChange={props.handleChangeZ}
             />
