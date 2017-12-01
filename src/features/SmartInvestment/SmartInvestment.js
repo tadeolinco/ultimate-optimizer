@@ -371,7 +371,17 @@ class SmartInvest extends Component {
           <div style={{ padding: 20, textAlign: 'center' }}>
             The final yield after {this.state.years} years will be ${
               this.state.solution[this.state.solution.length - 1].amount
-            }.
+            }{' '}
+            if you will invest{' '}
+            {this.state.solution
+              .filter(sol => sol.title !== 'V')
+              .sort((a, b) => a.year - b.year)
+              .map((sol, index) => (
+                <div key={index}>
+                  ${sol.amount} in Security {sol.title} at year {sol.year}
+                  {index !== this.state.solution.length - 2 ? ',' : '.'}
+                </div>
+              ))}.
           </div>
         )}
         <FloatingActionButton
