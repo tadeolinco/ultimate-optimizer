@@ -8,7 +8,11 @@ import Tableau from './Tableau';
 import MaximizeButton from './MaximizeButton';
 import SolveButton from './SolveButton';
 import Graph from './Graph';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 import { Tabs, Tab } from 'material-ui/Tabs';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import HelpIcon from 'material-ui/svg-icons/action/help-outline';
 
 class UltimateOptimizer extends Component {
   state = {
@@ -24,7 +28,8 @@ class UltimateOptimizer extends Component {
     maximize: true,
     tables: [],
     selectedTable: -1,
-    tab: 'input' // or table, graph
+    tab: 'input', // or table, graph,
+    help: false
   };
 
   handleSolve = () => {
@@ -52,17 +57,6 @@ class UltimateOptimizer extends Component {
       { title: 'Z', sub: 0 },
       { title: 'Solution', sub: 0 }
     ];
-    // data = [
-    //   ...data,
-    //   [
-    //     ...this.state.zs.map(
-    //       z => (this.state.maximize ? 0 - +z.value : +z.value)
-    //     ),
-    //     ...this.state.constraints.map(() => 0),
-    //     1,
-    //     0
-    //   ]
-    // ];
     data.push([
       ...this.state.zs.map(
         z => (this.state.maximize ? 0 - +z.value : +z.value)
@@ -312,6 +306,73 @@ class UltimateOptimizer extends Component {
             )}
           </Tab>
         </Tabs>
+        <Dialog
+          autoScrollBodyContent
+          open={this.state.help}
+          onRequestClose={() => this.setState({ help: false })}
+          actions={[
+            <FlatButton
+              label="Thanks!"
+              onClick={() => this.setState({ help: false })}
+            />
+          ]}>
+          <div className="label">Ultimate Optimizer</div>
+          <span>
+            The ultimate optimizer lets the you input an objective function that
+            you want to optimize, and its constraints. After solving, each
+            tableau of each step will be shown as well as a short conclusion.
+            The user can also see the graph of the functions.
+          </span>
+          <div className="label" />
+          <Divider />
+          <div className="label">Objective Function</div>
+          <span>
+            Enter here the variables that you want to optimize. You can add more
+            variables by clicking on the Floating Action Button beside the
+            label.
+          </span>
+          <div className="label">Constraints</div>
+          <span>
+            Enter here the constraints for your objective function. You can add
+            more constraints by clicking on the Floating Action Button. The
+            number of variables each constraint has will always mirror that of
+            the objective function's. You can also click on the inequality sign
+            to toggle it.
+          </span>
+          <div className="label">Maximize/Minimize</div>
+          <span>
+            Clicking on this button will toggle whether you want to maximize or
+            minimize your objective function.
+          </span>
+          <div className="label">Solve</div>
+          <span>
+            Clicking this will make the program start computing for the most
+            optimal solution. You will be directed to the Tables tab afterwards.
+          </span>
+          <div className="label" />
+          <Divider />
+          <div className="label">Table</div>
+          <span>
+            It can be shown here the tableau and basic solution for each step.
+            The pivot column and pivot element is also highlighted is darker
+            shades of gray. You can use the arrows below the tables to navigate
+            through each table. At the last table, a conclusion about the
+            optimization is shown.
+          </span>
+          <div className="label" />
+          <Divider />
+          <div className="label">Graph</div>
+          <span>
+            After solving, you can also see the graphs of the objective function
+            and the constraints, although they are only line graphs.
+          </span>
+          <div className="label" />
+        </Dialog>
+        <FloatingActionButton
+          onClick={() => this.setState({ help: true })}
+          style={{ position: 'fixed', right: 40, bottom: 40 }}>
+          <HelpIcon />
+        </FloatingActionButton>
       </Paper>
     );
   }

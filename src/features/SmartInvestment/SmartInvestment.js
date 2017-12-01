@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
-import { Tab, Tabs } from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 import Divider from 'material-ui/Divider';
-import uuid from 'uuid/v1';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import HelpIcon from 'material-ui/svg-icons/action/help-outline';
+import Dialog from 'material-ui/Dialog';
+
 class SmartInvest extends Component {
   state = {
     initialInvestment: 0,
@@ -13,7 +16,8 @@ class SmartInvest extends Component {
     y: { maturity: 0, yield: 0, yieldAfter: 0 },
     z: { maturity: 0, yield: 0 },
     w: { maturity: 0, yield: 0 },
-    solution: []
+    solution: [],
+    help: false
   };
 
   solve = () => {
@@ -370,6 +374,69 @@ class SmartInvest extends Component {
             }.
           </div>
         )}
+        <FloatingActionButton
+          onClick={() => this.setState({ help: true })}
+          style={{ position: 'fixed', right: 40, bottom: 40 }}>
+          <HelpIcon />
+        </FloatingActionButton>
+        <Dialog
+          autoScrollBodyContent
+          open={this.state.help}
+          onRequestClose={() => {
+            this.setState({ help: false });
+          }}
+          actions={[
+            <FlatButton
+              label="Thanks!"
+              onClick={() => {
+                this.setState({ help: false });
+              }}
+            />
+          ]}>
+          <div className="label">Smart Investment</div>
+          <span>
+            Use this tool to invest smartly in three different securities given
+            your initial investment, years of investment, annual yield of your
+            Savings Account, and the maturity rate and total yield from each of
+            the securities.
+          </span>
+          <div className="label" />
+          <Divider />
+          <div className="label">Initial Investment</div>
+          <span>
+            Enter here the initial amount of money that you have that you can
+            invest.
+          </span>
+          <div className="label">Years of Investment</div>
+          <span>Enter here the number of years you want to invest.</span>
+          <div className="label">Annual Yield</div>
+          <span>Enter here the annual yield of your savings account.</span>
+          <div className="label" />
+          <Divider />
+          <div className="label">Securities</div>
+          <div className="label" style={{ fontSize: 24 }}>
+            Maturity
+          </div>
+          <span>
+            Enter here the number of years it takes for you to gain the total
+            yield from the security.
+          </span>
+          <div className="label" style={{ fontSize: 24 }}>
+            Total Yield
+          </div>
+          <span>
+            Enter here the percent increase of your investment after maturity.
+          </span>
+          <div className="label" style={{ fontSize: 24 }}>
+            Total Yield Thereafter
+          </div>
+          <span>
+            Security Y is a special case. It changes the total yield if you
+            didn't buy it within the first year. Enter here the percent increase
+            of your investment after maturity if bought after the first year.
+          </span>
+          <div className="label" />
+        </Dialog>
       </Paper>
     );
   }
