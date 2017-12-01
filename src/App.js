@@ -11,7 +11,7 @@ import Snackbar from 'material-ui/Snackbar';
 
 class App extends Component {
   state = {
-    solver: SMART_INVEST,
+    solver: ULTIMATE_OPTIMIZER,
     theme: getMuiTheme({
       palette: { primary1Color: blue400, accent1Color: green400 }
     }),
