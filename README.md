@@ -1,29 +1,39 @@
 # ultimate-optimizer
 
-## Input
-You can provide a textbox for the whole equation. You can also have another input just for asking how many x's will be asked the application will dynamically create that many Z input boxes. You can also add a button to add or remove Z input boxes.
+# Setup
 
-AX(textbox, like with Z) <= or >= (dropdown) B(textbox, constant only)
+## Prerequisite
 
-Include a button to add more constraints.
+You will need the following:
 
-Maybe a radio button for minimize of maximize
+1. Node.js v8.9.0
+2. npm v5.5.1
+3. A web browser
 
-Include a submit button.
+## Installing dependencies
 
-## Output
-Include initial tablue and basic solution
+After unzipping, change directory to `ultimate-optimizer` and run:
 
+```
+npm install
+```
 
+This will install all dependencies listed in `package.json`.
 
+# Running the App
 
-## Smart Investment
-### Savings account X
-Initial investment(textbox)$
-year(textbox)
-annual yield (texbox)%
-### Security
-    maturity total_yield%  
-y   2        12             11% (only for first security)
-z   3        18
-w   4        24
+Once setup, inside the directory, run:
+
+```
+npm start
+```
+
+This will deploy a local server hosting your app. You can now visit the app
+using your browser by going to `localhost:3000`. This app is hosted on the web
+via Github pages as well. The link is
+`https://tadeolinco.github.io/ultimate-optimizer`.
+
+# Tutorial
+
+The tutorial is integrated with the app. You can view it by clicking on the
+Floating Action Button on the lower right hand side of the screen.
